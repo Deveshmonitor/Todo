@@ -1,56 +1,37 @@
 import React from "react";
 import "./global.css";
-import Home from "./src/pages/Home";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./src/screen/Home";
+import AddTask from "./src/screen/AddTask";
+import TaskDetail from "./src/screen/TaskDetails";
+import TaskList from "./src/screen/TaskList";
+import EditTask from "./src/screen/EditTask";
+import TaskReports from "./src/screen/TaskReports";
 
-const HomeScreen = ({ navigation }) => {
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <View className="flex-1 bg-gray-100 p-4">
-      {/* App Title */}
-      <Text className="text-2xl font-bold text-center mb-4">Smart To-Do List</Text>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: "#007AFF" },
+          headerTintColor: "#fff",
+          headerShown: false,
+          headerTitleStyle: { fontWeight: "bold" },
+        }}
 
-      {/* Quick Task View */}
-      <ScrollView className="mb-4">
-        {/* Pending Tasks Section */}
-        <View className="bg-white p-4 rounded-xl shadow mb-4">
-          <Text className="text-lg font-bold mb-2">Pending Tasks</Text>
-          <View className="border-l-4 border-yellow-500 pl-2 mb-2">
-            <Text className="text-base text-gray-800">🛒 Buy Vegetables (Due Today)</Text>
-          </View>
-          <View className="border-l-4 border-yellow-500 pl-2 mb-2">
-            <Text className="text-base text-gray-800">📑 Submit Report (Due Tomorrow)</Text>
-          </View>
-        </View>
-
-        {/* Completed Tasks Section */}
-        <View className="bg-white p-4 rounded-xl shadow mb-4">
-          <Text className="text-lg font-bold mb-2">Completed Tasks ✅</Text>
-          <View className="border-l-4 border-green-500 pl-2 mb-2">
-            <Text className="text-base text-gray-500 line-through">✍️ Finish Homework</Text>
-          </View>
-          <View className="border-l-4 border-green-500 pl-2 mb-2">
-            <Text className="text-base text-gray-500 line-through">🏋️ Gym Workout</Text>
-          </View>
-        </View>
-      </ScrollView>
-
-      {/* Quick Actions */}
-      <View className="flex-row justify-between mt-4">
-        <TouchableOpacity
-          className="bg-blue-500 p-3 rounded-xl flex-1 mr-2"
-          onPress={() => navigation.navigate("AddTask")}
-        >
-          <Text className="text-white text-center font-bold">➕ Add Task</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="bg-gray-800 p-3 rounded-xl flex-1 ml-2"
-          onPress={() => navigation.navigate("TaskList")}
-        >
-          <Text className="text-white text-center font-bold">📋 View Tasks</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="AddTask" component={AddTask} />
+        <Stack.Screen name="TaskDetail" component={TaskDetail} />
+        <Stack.Screen name="TaskList" component={TaskList} />
+        <Stack.Screen name="EditTask" component={EditTask} />
+        <Stack.Screen name="TaskReports" component={TaskReports} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-export default HomeScreen;
+export default App;
