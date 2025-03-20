@@ -41,9 +41,9 @@ const HomeScreen = () => {
   return (
     <View className="flex-1 bg-gray-100 p-4">
 
-      <Text className="text-3xl font-extrabold text-center text-gray-900 mb-6">
-        Smart To-Do List
-      </Text>
+<Text className="text-4xl font-semibold text-center text-gray-900 drop-shadow-md mb-6">
+  Smart Todo App
+</Text>
 
       {!loading && tasks.length === 0 ? (
         <View className="flex-1 justify-center items-center border border-dashed border-gray-400 p-6 rounded-lg">
@@ -119,7 +119,7 @@ const HomeScreen = () => {
 
         <TouchableOpacity
           className="bg-gray-700 px-4 py-3 rounded-lg flex-1"
-          onPress={() => navigation.navigate('TaskReports')}>
+          onPress={() => navigation.navigate('TaskList')}>
           <Text className="text-white font-semibold text-center">
              View All Tasks
           </Text>

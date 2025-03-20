@@ -1,80 +1,162 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import firestore from "@react-native-firebase/firestore";
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  Modal,
+  Pressable,
+  RefreshControl,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+
+// Fixed categories (same as in AddTask)
+const CATEGORIES = [
+  'Work',
+  'Personal',
+  'Fitness',
+  'Shopping',
+  'Miscellaneous',
+  'Study',
+  'Other',
+];
+const STATUS_OPTIONS = ['All', 'Pending', 'Completed']; // Status options
 
 const TaskList = () => {
   const navigation = useNavigation();
-  const [tasks, setTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [sortOption, setSortOption] = useState("Newest");
+  const [tasks, setTasks] = useState([]); // All tasks fetched from Firestore
+  const [filteredTasks, setFilteredTasks] = useState([]); // Tasks after filtering and sorting
+  const [searchText, setSearchText] = useState(''); // Search input text
+  const [loading, setLoading] = useState(true); // Loading state for Firestore fetch
+  const [error, setError] = useState(null); // Error state
+  const [isFilterModalVisible, setFilterModalVisible] = useState(false); // Filter modal visibility
+  const [selectedCategory, setSelectedCategory] = useState('All'); // Selected category filter
+  const [selectedStatus, setSelectedStatus] = useState('All'); // Selected status filter
+  const [selectedDate, setSelectedDate] = useState(''); // Selected due date filter
+  const [refreshing, setRefreshing] = useState(false);
 
+  // Fetch tasks from Firestore
+
+  const fetchTasks = async () => {
+    try {
+      const querySnapshot = await firestore().collection('tasks').get();
+      const taskList = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTasks(taskList);
+      setFilteredTasks(taskList); // Initialize filteredTasks with all tasks
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      setError('Failed to fetch tasks. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const querySnapshot = await firestore().collection("tasks").get();
-        const taskList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setTasks(taskList);
-        setFilteredTasks(taskList);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
-
     fetchTasks();
   }, []);
 
-  // 🔍 **Search Function**
-  const handleSearch = (text) => {
+  // Handle search input
+  const handleSearch = text => {
     setSearchText(text);
-    const filtered = tasks.filter((task) =>
-      task.title.toLowerCase().includes(text.toLowerCase())
-    );
+    applyFilters(text, selectedCategory, selectedStatus, selectedDate);
+  };
+
+  // Apply filters and sorting
+  const applyFilters = (searchText, category, status, date) => {
+    let filtered = tasks;
+
+    // Filter by search text
+    if (searchText) {
+      filtered = filtered.filter(task =>
+        task.title.toLowerCase().includes(searchText.toLowerCase()),
+      );
+    }
+
+    // Filter by category
+    if (category !== 'All') {
+      filtered = filtered.filter(task => task.category === category);
+    }
+
+    // Filter by status
+    if (status !== 'All') {
+      filtered = filtered.filter(task => task.status === status);
+    }
+
+    // Filter by due date
+    if (date) {
+      filtered = filtered.filter(task => task.dueDate === date);
+    }
+
     setFilteredTasks(filtered);
   };
 
-  // 📌 **Filter by Category (including Pending)**
-  const filterByCategory = (category) => {
-    setSelectedCategory(category);
-    if (category === "All") {
-      setFilteredTasks(tasks);
-    } else if (category === "Pending") {
-      const filtered = tasks.filter((task) => task.status === "Pending");
-      setFilteredTasks(filtered);
-    } else {
-      const filtered = tasks.filter((task) => task.category === category);
-      setFilteredTasks(filtered);
-    }
+  // Open filter modal
+  const openFilterModal = () => {
+    setFilterModalVisible(true);
   };
 
-  // 📌 **Sort Tasks**
-  const sortTasks = (option) => {
-    setSortOption(option);
-    let sortedTasks = [...filteredTasks];
-
-    if (option === "Newest") {
-      sortedTasks.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
-    } else if (option === "Oldest") {
-      sortedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-    } else if (option === "Completed") {
-      sortedTasks = sortedTasks.filter((task) => task.status === "Completed");
-    }
-
-    setFilteredTasks(sortedTasks);
+  // Close filter modal and apply filters
+  const closeFilterModal = () => {
+    setFilterModalVisible(false);
+    applyFilters(searchText, selectedCategory, selectedStatus, selectedDate);
   };
+
+  // Reset filters
+  const resetFilters = () => {
+    setSelectedCategory('All');
+    setSelectedStatus('All');
+    setSelectedDate('');
+    applyFilters(searchText, 'All', 'All', '');
+  };
+
+  // Render task item
+  const renderTaskItem = ({item}) => (
+    <TouchableOpacity
+      className="bg-white p-4 my-2 rounded-lg shadow-md"
+      onPress={() => navigation.navigate('TaskDetail', {task: item})}>
+      <Text className="text-lg font-medium">{item.title}</Text>
+      <Text className="text-gray-600">Category: {item.category}</Text>
+      <Text className="text-gray-600">Due: {item.dueDate}</Text>
+      <Text
+        className={`text-sm ${
+          item.status === 'Completed' ? 'text-green-600' : 'text-red-600'
+        }`}>
+        Status: {item.status}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  // Show loading indicator
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
+  // Show error message
+  if (error) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text className="text-red-600 text-lg">{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-gray-100 p-4">
       <Text className="text-2xl font-bold text-center text-gray-900 mb-4">
-        📌 Task List
+        Task List
       </Text>
 
-      {/* 🔍 Search Bar */}
+      {/* Search Input */}
       <TextInput
         className="bg-white p-3 rounded-lg shadow-md mb-3"
         placeholder="🔍 Search tasks..."
@@ -82,49 +164,108 @@ const TaskList = () => {
         onChangeText={handleSearch}
       />
 
-      {/* 📌 Filter & Sort Options */}
-      <View className="flex-row justify-between mb-3">
-        <TouchableOpacity className="bg-blue-500 px-4 py-2 rounded-lg" onPress={() => filterByCategory("All")}>
-          <Text className="text-white">All</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-blue-500 px-4 py-2 rounded-lg" onPress={() => filterByCategory("Work")}>
-          <Text className="text-white">Work</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-blue-500 px-4 py-2 rounded-lg" onPress={() => filterByCategory("Personal")}>
-          <Text className="text-white">Personal</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-blue-500 px-4 py-2 rounded-lg" onPress={() => filterByCategory("Pending")}>
-          <Text className="text-white">Pending</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Filter Button */}
+      <TouchableOpacity
+        className="bg-blue-500 px-4 py-2 rounded-lg mb-3"
+        onPress={openFilterModal}>
+        <Text className="text-white font-semibold text-center">
+          Filter Tasks
+        </Text>
+      </TouchableOpacity>
 
-      <View className="flex-row justify-between mb-3">
-        <TouchableOpacity className="bg-gray-700 px-4 py-2 rounded-lg" onPress={() => sortTasks("Newest")}>
-          <Text className="text-white">🆕 Newest</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-gray-700 px-4 py-2 rounded-lg" onPress={() => sortTasks("Oldest")}>
-          <Text className="text-white">📅 Oldest</Text>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-gray-700 px-4 py-2 rounded-lg" onPress={() => sortTasks("Completed")}>
-          <Text className="text-white">✅ Completed</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Task List */}
+      {filteredTasks.length > 0 ? (
+        <FlatList
+          data={filteredTasks}
+          keyExtractor={item => item.id}
+          renderItem={renderTaskItem}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchTasks} />}
+        />
+      ) : (
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-gray-600 text-lg">No tasks found.</Text>
+        </View>
+      )}
 
-      {/* 📜 Task List */}
-      <FlatList
-        data={filteredTasks}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            className="bg-white p-4 my-2 rounded-lg shadow-md"
-            onPress={() => navigation.navigate("TaskDetail", { task: item })}
-          >
-            <Text className="text-lg font-medium">{item.title}</Text>
-            <Text className="text-gray-600">Category: {item.category}</Text>
-            <Text className="text-gray-600">Due: {item.dueDate}</Text>
-          </TouchableOpacity>
-        )}
-      />
+      {/* Filter Modal */}
+      <Modal
+        visible={isFilterModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeFilterModal}>
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-6 rounded-lg w-11/12">
+            <Text className="text-xl font-bold mb-4">Filter Tasks</Text>
+
+            {/* Category Filter */}
+            <Text className="text-lg font-semibold mb-2">Category</Text>
+            <View className="flex-row flex-wrap mb-4">
+              {['All', ...CATEGORIES].map(category => (
+                <TouchableOpacity
+                  key={category}
+                  className={`px-4 py-2 m-1 rounded-lg ${
+                    selectedCategory === category
+                      ? 'bg-blue-500'
+                      : 'bg-gray-300'
+                  }`}
+                  onPress={() => setSelectedCategory(category)}>
+                  <Text
+                    className={`font-semibold ${
+                      selectedCategory === category
+                        ? 'text-white'
+                        : 'text-black'
+                    }`}>
+                    {category}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Status Filter */}
+            <Text className="text-lg font-semibold mb-2">Status</Text>
+            <View className="flex-row flex-wrap mb-4">
+              {STATUS_OPTIONS.map(status => (
+                <TouchableOpacity
+                  key={status}
+                  className={`px-4 py-2 m-1 rounded-lg ${
+                    selectedStatus === status ? 'bg-blue-500' : 'bg-gray-300'
+                  }`}
+                  onPress={() => setSelectedStatus(status)}>
+                  <Text
+                    className={`font-semibold ${
+                      selectedStatus === status ? 'text-white' : 'text-black'
+                    }`}>
+                    {status}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Due Date Filter */}
+            <Text className="text-lg font-semibold mb-2">Due Date</Text>
+            <TextInput
+              className="bg-white p-3 rounded-lg border border-gray-300 mb-4"
+              placeholder="YYYY-MM-DD"
+              value={selectedDate}
+              onChangeText={setSelectedDate}
+            />
+
+            {/* Action Buttons */}
+            <View className="flex-row justify-between">
+              <TouchableOpacity
+                className="bg-red-500 px-4 py-2 rounded-lg"
+                onPress={resetFilters}>
+                <Text className="text-white font-semibold">Reset</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-green-500 px-4 py-2 rounded-lg"
+                onPress={closeFilterModal}>
+                <Text className="text-white font-semibold">Apply</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

@@ -8,13 +8,14 @@ import TaskDetail from "./src/screen/TaskDetails";
 import TaskList from "./src/screen/TaskList";
 import EditTask from "./src/screen/EditTask";
 import TaskReports from "./src/screen/TaskReports";
+import Splash from "./src/screen/Splash";
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home"
+      <Stack.Navigator initialRouteName="Splash"
         screenOptions={{
           headerStyle: { backgroundColor: "#007AFF" },
           headerTintColor: "#fff",
@@ -29,6 +30,7 @@ const App = () => {
         <Stack.Screen name="TaskList" component={TaskList} />
         <Stack.Screen name="EditTask" component={EditTask} />
         <Stack.Screen name="TaskReports" component={TaskReports} />
+        <Stack.Screen name="Splash" component={Splash} />
       </Stack.Navigator>
     </NavigationContainer>
   );

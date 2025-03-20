@@ -41,6 +41,7 @@ const AddTask = ({ navigation }) => {
         dueDate,
         category,
         notes,
+        completedDate: null,
         status: "Pending",
         createdAt: firestore.FieldValue.serverTimestamp(),
       });
