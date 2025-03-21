@@ -1,4 +1,4 @@
-import React, {useState, useCallback } from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -35,14 +35,14 @@ const HomeScreen = () => {
   useFocusEffect(
     useCallback(() => {
       fetchTasks();
-    }, [])
+    }, []),
   );
 
   const completedTasks = tasks.filter(task => task.status === 'Completed');
   const pendingTasks = tasks.filter(task => task.status !== 'Completed');
 
   // Format the completed date
-  const formatCompletedDate = (date) => {
+  const formatCompletedDate = date => {
     if (!date) return 'N/A'; // Handle missing date
 
     // Convert Firestore timestamp to JavaScript Date object
@@ -64,7 +64,9 @@ const HomeScreen = () => {
       <Text className="text-4xl font-semibold text-center text-gray-900 drop-shadow-md mb-6">
         Smart Todo App
       </Text>
-      <ScrollView  className="flex-1 px-4 py-4" showsVerticalScrollIndicator={false} >
+      <ScrollView
+        className="flex-1 px-4 py-4"
+        showsVerticalScrollIndicator={false}>
         {!loading && tasks.length === 0 ? (
           <View className="flex-1 justify-center items-center border border-dashed border-gray-400 p-6 rounded-lg">
             <Text className="text-gray-500 text-lg font-semibold">
@@ -81,27 +83,35 @@ const HomeScreen = () => {
             <Text className="text-xl font-semibold text-gray-800 mb-2">
               Pending Tasks
             </Text>
-            <FlatList
-              data={pendingTasks}
-              scrollEnabled={false}
-              keyExtractor={item => item.id}
-              refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={fetchTasks}
-                />
-              }
-              renderItem={({item}) => (
-                <View className="p-4 my-2 rounded-lg shadow-md bg-white border border-gray-300">
-                  <Text className="text-lg font-semibold text-gray-900">
-                    {item.title}
-                  </Text>
-                  <Text className="text-gray-600">
-                    Due: {item.dueDate || 'N/A'}
-                  </Text>
-                </View>
-              )}
-            />
+            {pendingTasks.length > 0 ? (
+              <FlatList
+                data={pendingTasks}
+                scrollEnabled={false}
+                keyExtractor={item => item.id}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={fetchTasks}
+                  />
+                }
+                renderItem={({item}) => (
+                  <View className="p-4 my-2 rounded-lg shadow-md bg-white border border-gray-300">
+                    <Text className="text-lg font-semibold text-gray-900">
+                      {item.title}
+                    </Text>
+                    <Text className="text-gray-600">
+                      Due: {item.dueDate || 'N/A'}
+                    </Text>
+                  </View>
+                )}
+              />
+            ) : (
+              <View className="p-4 my-2 rounded-lg shadow-md bg-gray-200 border border-gray-400 flex justify-center items-center">
+                <Text className="text-lg font-semibold text-gray-600">
+                  No completed tasks available.
+                </Text>
+              </View>
+            )}
 
             <Text className="text-xl font-semibold text-green-800 mt-6 mb-2">
               Completed Tasks
@@ -118,7 +128,7 @@ const HomeScreen = () => {
                       {item.title}
                     </Text>
                     <Text className="text-gray-600">
-                    Completed On: {formatCompletedDate(item.completedDate)}
+                      Completed On: {formatCompletedDate(item.completedDate)}
                     </Text>
                   </View>
                 )}

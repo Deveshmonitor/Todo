@@ -41,7 +41,10 @@ const TaskDetails = () => {
 
   return (
     <ScrollView className="flex-1 bg-white px-6 py-8">
-      <Text className="text-3xl font-extrabold text-black mb-6">
+       <Text className="text-2xl font-semibold text-gray-900">
+               Task Details
+            </Text>
+      <Text className="text-3xl font-semibold text-black mb-6">
         {task.title}
       </Text>
 

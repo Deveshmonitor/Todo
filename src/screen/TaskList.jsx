@@ -9,9 +9,10 @@ import {
   ActivityIndicator,
   Modal,
   Pressable,
-  RefreshControl, ScrollView
+  RefreshControl,
+  ScrollView,
 } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import {Swipeable} from 'react-native-gesture-handler';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 
@@ -61,7 +62,7 @@ const TaskList = () => {
   useFocusEffect(
     useCallback(() => {
       fetchTasks();
-    }, [])
+    }, []),
   );
   // Handle search input
   const handleSearch = text => {
@@ -117,13 +118,13 @@ const TaskList = () => {
     applyFilters(searchText, 'All', 'All', '');
   };
 
-    // Function to handle task deletion (only from the screen)
-    const handleDeleteTask = (taskId) => {
-      const updatedTasks = tasks.filter((task) => task.id !== taskId); // Remove the task from the list
-      setFilteredTasks(updatedTasks); // Update the state
-    };
+  // Function to handle task deletion (only from the screen)
+  const handleDeleteTask = taskId => {
+    const updatedTasks = tasks.filter(task => task.id !== taskId); // Remove the task from the list
+    setFilteredTasks(updatedTasks); // Update the state
+  };
   // Render task item
-  const renderTaskItem = ({ item }) => {
+  const renderTaskItem = ({item}) => {
     // Swipeable right action (Delete button)
     const renderRightActions = () => {
       return (
@@ -140,7 +141,7 @@ const TaskList = () => {
       >
         <TouchableOpacity
           className="bg-white p-4 my-2 rounded-lg shadow-md"
-          onPress={() => navigation.navigate('TaskDetail', { task: item })} // Navigate to detail screen
+          onPress={() => navigation.navigate('TaskDetail', {task: item})} // Navigate to detail screen
         >
           <Text className="text-lg font-medium">{item.title}</Text>
           <Text className="text-gray-600">Category: {item.category}</Text>
@@ -148,8 +149,7 @@ const TaskList = () => {
           <Text
             className={`text-sm ${
               item.status === 'Completed' ? 'text-green-600' : 'text-red-600'
-            }`}
-          >
+            }`}>
             Status: {item.status}
           </Text>
         </TouchableOpacity>
@@ -177,130 +177,137 @@ const TaskList = () => {
 
   return (
     <View className="flex-1 bg-gray-100 p-4">
-      <Text className="text-2xl font-bold text-center text-gray-900 mb-4">
+      <Text className="text-2xl font-semibold text-center text-gray-900 mb-4">
         Task List
       </Text>
       <ScrollView showsVerticalScrollIndicator={false}>
-
-      {/* Search Input */}
-      <TextInput
-        className="bg-white p-3 rounded-lg shadow-md mb-3"
-        placeholder="🔍 Search tasks..."
-        value={searchText}
-        onChangeText={handleSearch}
-      />
-
-      {/* Filter Button */}
-      <TouchableOpacity
-        className="bg-blue-500 px-4 py-2 rounded-lg mb-3"
-        onPress={openFilterModal}>
-        <Text className="text-white font-semibold text-center">
-          Filter Tasks
-        </Text>
-      </TouchableOpacity>
-
-    <TouchableOpacity>
-    <View>
-     
-      {/* Task List */}
-      {filteredTasks.length > 0 ? (
-        <FlatList
-          data={filteredTasks}
-          keyExtractor={(item) => item.id}
-          renderItem={renderTaskItem}
-          scrollEnabled={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchTasks} />}
+        {/* Search Input */}
+        <TextInput
+          className="bg-white p-3 rounded-lg shadow-md mb-3"
+          placeholder="Search tasks... 🔍"
+          value={searchText}
+          onChangeText={handleSearch}
         />
-      ) : (
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-gray-600 text-lg">No tasks found.</Text>
-        </View>
-      )}
-      </View>
-      </TouchableOpacity>
 
-      {/* Filter Modal */}
-      <Modal
-        visible={isFilterModalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={closeFilterModal}>
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white p-6 rounded-lg w-11/12">
-            <Text className="text-xl font-bold mb-4">Filter Tasks</Text>
+        {/* Filter Button */}
+        <TouchableOpacity
+          className="bg-blue-500 px-4 py-2 rounded-lg mb-3"
+          onPress={openFilterModal}>
+          <Text className="text-white font-semibold text-center">
+            Filter Tasks
+          </Text>
+        </TouchableOpacity>
 
-            {/* Category Filter */}
-            <Text className="text-lg font-semibold mb-2">Category</Text>
-            <View className="flex-row flex-wrap mb-4">
-              {['All', ...CATEGORIES].map(category => (
-                <TouchableOpacity
-                  key={category}
-                  className={`px-4 py-2 m-1 rounded-lg ${
-                    selectedCategory === category
-                      ? 'bg-blue-500'
-                      : 'bg-gray-300'
-                  }`}
-                  onPress={() => setSelectedCategory(category)}>
-                  <Text
-                    className={`font-semibold ${
+        <TouchableOpacity>
+          <View>
+            {/* Task List */}
+            {filteredTasks.length > 0 ? (
+              <FlatList
+                data={filteredTasks}
+                keyExtractor={item => item.id}
+                renderItem={renderTaskItem}
+                scrollEnabled={false}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={fetchTasks}
+                  />
+                }
+              />
+            ) : (
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-gray-600 text-lg">No tasks found.</Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+
+        {/* Filter Modal */}
+        <Modal
+          visible={isFilterModalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={closeFilterModal}>
+          <View className="flex-1 justify-center items-center bg-black/50">
+            <View className="bg-white p-6 rounded-lg w-11/12">
+              <Text className="text-xl font-bold mb-4">Filter Tasks</Text>
+
+              {/* Category Filter */}
+              <Text className="text-lg font-semibold mb-2">Category</Text>
+              <View className="flex-row flex-wrap mb-4">
+                {['All', ...CATEGORIES].map(category => (
+                  <TouchableOpacity
+                    key={category}
+                    className={`px-4 py-2 m-1 rounded-lg ${
                       selectedCategory === category
-                        ? 'text-white'
-                        : 'text-black'
-                    }`}>
-                    {category}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+                        ? 'bg-blue-500'
+                        : 'bg-gray-300'
+                    }`}
+                    onPress={() => setSelectedCategory(category)}>
+                    <Text
+                      className={`font-semibold ${
+                        selectedCategory === category
+                          ? 'text-white'
+                          : 'text-black'
+                      }`}>
+                      {category}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
 
-            {/* Status Filter */}
-            <Text className="text-lg font-semibold mb-2">Status</Text>
-            <View className="flex-row flex-wrap mb-4">
-              {STATUS_OPTIONS.map(status => (
+              {/* Status Filter */}
+              <Text className="text-lg font-semibold mb-2">Status</Text>
+              <View className="flex-row flex-wrap mb-4">
+                {STATUS_OPTIONS.map(status => (
+                  <TouchableOpacity
+                    key={status}
+                    className={`px-4 py-2 m-1 rounded-lg ${
+                      selectedStatus === status ? 'bg-blue-500' : 'bg-gray-300'
+                    }`}
+                    onPress={() => setSelectedStatus(status)}>
+                    <Text
+                      className={`font-semibold ${
+                        selectedStatus === status ? 'text-white' : 'text-black'
+                      }`}>
+                      {status}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/* Due Date Filter */}
+              <Text className="text-lg font-semibold mb-2">Due Date</Text>
+              <TextInput
+                className="bg-white p-3 rounded-lg border border-gray-300 mb-4"
+                placeholder="YYYY-MM-DD"
+                value={selectedDate}
+                onChangeText={setSelectedDate}
+              />
+
+              {/* Action Buttons */}
+              <View className="flex flex-row justify-between mb-4">
                 <TouchableOpacity
-                  key={status}
-                  className={`px-4 py-2 m-1 rounded-lg ${
-                    selectedStatus === status ? 'bg-blue-500' : 'bg-gray-300'
-                  }`}
-                  onPress={() => setSelectedStatus(status)}>
-                  <Text
-                    className={`font-semibold ${
-                      selectedStatus === status ? 'text-white' : 'text-black'
-                    }`}>
-                    {status}
+                  className="bg-gray-700 px-4 py-3 rounded-lg flex-1 mr-2"
+                  onPress={resetFilters}>
+                  <Text className="text-white font-semibold text-center">
+                    Reset
                   </Text>
                 </TouchableOpacity>
-              ))}
-            </View>
 
-            {/* Due Date Filter */}
-            <Text className="text-lg font-semibold mb-2">Due Date</Text>
-            <TextInput
-              className="bg-white p-3 rounded-lg border border-gray-300 mb-4"
-              placeholder="YYYY-MM-DD"
-              value={selectedDate}
-              onChangeText={setSelectedDate}
-            />
-
-            {/* Action Buttons */}
-            <View className="flex-row justify-between">
-              <TouchableOpacity
-                className="bg-red-500 px-4 py-2 rounded-lg"
-                onPress={resetFilters}>
-                <Text className="text-white font-semibold">Reset</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                className="bg-green-500 px-4 py-2 rounded-lg"
-                onPress={closeFilterModal}>
-                <Text className="text-white font-semibold">Apply</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  className="bg-blue-700 px-4 py-3 rounded-lg flex-1"
+                  onPress={closeFilterModal}>
+                  <Text className="text-white font-semibold text-center">
+                    Apply
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
       </ScrollView>
     </View>
-    
   );
 };
 

@@ -1,97 +1,189 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Project Name
 
-# Getting Started
+## 📌 Project Setup Instructions
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+1. **Clone the Repository:**
+   ```sh
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
+   ```
+2. **Install Dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Run the Project:**
+   ```sh
+   npm start
+   ```
+4. **Build the Project:**
+   ```sh
+   npm run build
+   ```
+5. **Run on Emulator/Device (For Mobile Apps):**
+   ```sh
+   npx react-native run-android  # For Android
+   npx react-native run-ios      # For iOS
+   ```
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🎯 Implemented Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### ✅ Home Screen (Main Dashboard)
+**Functionality:** Displays an overview of tasks, categorized into pending and completed sections.
 
-```sh
-# Using npm
-npm start
+**Key Elements:**
+- ✅ **App Title:** "Smart To-Do List" (Top Header)
+- ✅ **Quick Task View:**
+  - 📌 **Pending Tasks:** Displays tasks that need to be completed.
+  - ✅ **Completed Tasks:** Shows finished tasks.
+- ✅ **Quick Actions:**
+  - ➕ **Add Task Button** → Opens the task creation screen.
+  - 📂 **View Tasks Button** → Navigates to the complete task list.
 
-# OR using Yarn
-yarn start
-```
+**Example UI Layout:**
+- 📌 **Pending Tasks:**
+  - 🛒 Buy Vegetables (Due Today)
+  - 📄 Submit Report (Due Tomorrow)
+- ✔ **Completed Tasks:**
+  - 🧘 Morning Yoga (Yesterday)
+  - 📞 Call Dad (2 Days Ago)
+- [➕ Add New Task] [📂 View All Tasks]
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### ✅ Add New Task Screen
+**Functionality:** Allows users to create and add tasks with relevant details.
 
-### Android
+**Components:**
+- 📝 **Task Title Input** (e.g., "Pay Electricity Bill")
+- 🗓 **Due Date Selector** (Defaults to the current date)
+- 📌 **Category Selection:** (Work, Personal, Fitness, Shopping, Miscellaneous)
+- 📝 **Notes Section** (Optional)
+- ✔ **Save Button** → Saves task to database
+- ❌ **Cancel Button** → Returns to the previous screen
 
-```sh
-# Using npm
-npm run android
+**Example UI Layout:**
+- 📝 Task Title: [____________]
+- 🗓 Due Date: [ Choose Date ]
+- 📌 Category: [Shopping]
+- 📝 Notes: [____________]
+- [✔ Save Task] [❌ Cancel]
 
-# OR using Yarn
-yarn android
-```
+---
 
-### iOS
+### ✅ Task List Screen
+**Functionality:** Displays a structured list of all saved tasks with sorting and filtering options.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+**Components:**
+- 🔍 **Search Bar:** Filter tasks by keyword.
+- 📌 **Sort & Filter Options:** Filter tasks based on date, category, or completion status.
+- 📌 **Task Items Display:** Each item should show:
+  - ✅ **Task Title**
+  - 📆 **Due Date**
+  - 📌 **Category**
+  - ⏳ **Status (Pending / Completed)**
+- ✏ **Tap to Edit:** Clicking a task should open the edit screen.
+- 🗑 **Swipe to Delete:** Users can remove tasks by swiping left/right.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+**Example UI Layout:**
+- 🔍 Search: [_____________] [Filter]
+- 📆 Date | 📌 Category | 📝 Task Title | ⏳ Status
+- 📆 12 Sep 24 | 📖 Study | Read 5 Chapters | ⏳ Pending
+- 📆 10 Sep 24 | 💼 Work | Send Emails | ✅ Completed
+- 📆 08 Sep 24 | 🏃‍♂️ Health | Evening Walk | ✅ Completed
 
-```sh
-bundle install
-```
+---
 
-Then, and every time you update your native dependencies, run:
+### ✅ Task Detail Screen
+**Functionality:** Displays complete details of a selected task.
 
-```sh
-bundle exec pod install
-```
+**Components:**
+- 📝 **Task Title**
+- 📆 **Due Date**
+- 📌 **Category**
+- ⏳ **Task Status (Pending/Completed)**
+- 📝 **Task Notes**
+- ✏ **Edit Button** → Modify task details
+- 🗑 **Delete Button** → Remove task permanently
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+**Example UI Layout:**
+- 📝 **Pay Electricity Bill**
+- 📆 **Due Date:** 15 Sep 2024
+- 📌 **Category:** Bills
+- ⏳ **Status:** Pending
+- 📝 **Notes:** Pay online before 5 PM.
+- [✏ Edit Task] [🗑 Delete Task]
 
-```sh
-# Using npm
-npm run ios
+---
 
-# OR using Yarn
-yarn ios
-```
+### ✅ Edit Task Screen
+**Functionality:** Allows users to update task information.
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+**Components:**
+- 📌 Same as Add Task Screen, but pre-filled with existing data.
+- ✔ **Update Button** → Saves modifications.
+- ❌ **Cancel Button** → Discards changes and returns to Task Detail Screen.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+---
 
-## Step 3: Modify your app
+### ✅ Task Summary & Reports (Optional - Extra Credit Feature)
+**Functionality:** Provides an analytical overview of tasks completed over time.
 
-Now that you have successfully run the app, let's make changes!
+**Components:**
+- 📊 **Graphical Report:** Bar Chart / Pie Chart representing task distribution.
+- 📆 **Date Filter:** Users can select a time range (weekly/monthly).
+- 📊 **Task Statistics:**
+  - 📌 **Total Tasks:** 15
+  - ⏳ **Pending Tasks:** 7
+  - ✅ **Completed Tasks:** 8
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+---
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 🔥 Firebase & Firestore Integration
+- This project uses **Firebase** for backend services and **Firestore**, a NoSQL cloud database, for storing task data.
+- Firestore ensures seamless real-time data synchronization, allowing users to manage their tasks efficiently across multiple devices.
+- All task-related data, including title, due date, category, status, and notes, are securely stored in the Firestore database.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+---
 
-## Congratulations! :tada:
+## 📸 Screenshots of the App
 
-You've successfully run and modified your React Native App. :partying_face:
+![Screenshot 1](path-to-screenshot-1.png)
+![Screenshot 2](path-to-screenshot-2.png)
+![Screenshot 3](path-to-screenshot-3.png)
 
-### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 🎥 Video Demo
 
-# Troubleshooting
+[Watch Demo](https://your-demo-video-link.com)
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+---
 
-# Learn More
+## 📱 APK File
 
-To learn more about React Native, take a look at the following resources:
+[Download APK](https://your-apk-download-link.com)
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+---
+
+## ❓ Frequently Asked Questions (FAQ)
+
+### 1️⃣ What is this project about?
+This is a Smart To-Do List app that helps users manage tasks efficiently, providing features like task categorization, reminders, and reports.
+
+### 2️⃣ How can I install and run this project?
+Follow the **Project Setup Instructions** section above to install dependencies and run the project.
+
+### 3️⃣ What technologies are used?
+- **Frontend:** React Native, JavaScript, Tailwind CSS
+- **Backend:** Firebase Firestore
+
+### 4️⃣ Can I contribute to this project?
+Yes! Feel free to fork the repository, create a new branch, make your changes, and submit a pull request.
+
+### 5️⃣ How do I report a bug or request a feature?
+Open an issue on the GitHub repository or contact the project maintainers.
+
+---
+
