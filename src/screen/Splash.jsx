@@ -12,7 +12,7 @@ const Splash = ({ navigation }) => {
 
   return (
     <LinearGradient 
-      colors={['#4c669f', '#3b5998', '#192f6a']} // Change colors as needed
+      colors={['#4c669f', '#3b5998', '#192f6a']} 
       className="flex-1 justify-center items-center"
       style={{ flex: 1 }}
     >
@@ -21,14 +21,14 @@ const Splash = ({ navigation }) => {
         animation="fadeInDownBig" 
         duration={2000}
       >
-        Technifini 
+        Techinfini 
       </Animatable.Text>
       <Animatable.Text 
         className="text-2xl font-bold text-white" 
         animation="fadeInDownBig" 
         duration={2000}
       >
-       Smart ToDo Aplication
+       Smart ToDo Application
       </Animatable.Text>
     </LinearGradient>
   );

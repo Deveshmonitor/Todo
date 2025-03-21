@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 import firestore from "@react-native-firebase/firestore";
-import Loading from "../components/Loading";
 
 const TaskReports = () => {
   const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("monthly"); // Default filter: monthly
   const [error, setError] = useState(null);
 
@@ -23,8 +21,6 @@ const TaskReports = () => {
       } catch (error) {
         console.error("Error fetching tasks:", error);
         setError("Failed to fetch tasks. Please try again later.");
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -52,6 +48,11 @@ const TaskReports = () => {
     datasets: [
       {
         data: [totalTasks, pendingTasks, completedTasks],
+        colors: [
+          (opacity = 1) => `rgba(75, 192, 192, ${opacity})`, // Teal for Total Tasks
+          (opacity = 1) => `rgba(255, 99, 132, ${opacity})`, // Red for Pending Tasks
+          (opacity = 1) => `rgba(54, 162, 235, ${opacity})`, // Blue for Completed Tasks
+        ],
       },
     ],
   };
@@ -74,10 +75,6 @@ const TaskReports = () => {
     { label: "Weekly", value: "weekly" },
     { label: "Monthly", value: "monthly" },
   ];
-
-  if (loading) {
-    return <Loading isLoading={loading} />;
-  }
 
   if (error) {
     return (
@@ -128,6 +125,8 @@ const TaskReports = () => {
           verticalLabelRotation={0}
           showBarTops={false}
           style={{ borderRadius: 8 }}
+          withCustomBarColorFromData // Enable custom bar colors
+          flatColor // Use flat colors instead of gradients
         />
       </View>
 

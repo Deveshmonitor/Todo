@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,10 @@ import {
   ActivityIndicator,
   Modal,
   Pressable,
-  RefreshControl,
+  RefreshControl, ScrollView
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { Swipeable } from 'react-native-gesture-handler';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 
 // Fixed categories (same as in AddTask)
@@ -57,10 +58,11 @@ const TaskList = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks();
+    }, [])
+  );
   // Handle search input
   const handleSearch = text => {
     setSearchText(text);
@@ -115,22 +117,45 @@ const TaskList = () => {
     applyFilters(searchText, 'All', 'All', '');
   };
 
+    // Function to handle task deletion (only from the screen)
+    const handleDeleteTask = (taskId) => {
+      const updatedTasks = tasks.filter((task) => task.id !== taskId); // Remove the task from the list
+      setFilteredTasks(updatedTasks); // Update the state
+    };
   // Render task item
-  const renderTaskItem = ({item}) => (
-    <TouchableOpacity
-      className="bg-white p-4 my-2 rounded-lg shadow-md"
-      onPress={() => navigation.navigate('TaskDetail', {task: item})}>
-      <Text className="text-lg font-medium">{item.title}</Text>
-      <Text className="text-gray-600">Category: {item.category}</Text>
-      <Text className="text-gray-600">Due: {item.dueDate}</Text>
-      <Text
-        className={`text-sm ${
-          item.status === 'Completed' ? 'text-green-600' : 'text-red-600'
-        }`}>
-        Status: {item.status}
-      </Text>
-    </TouchableOpacity>
-  );
+  const renderTaskItem = ({ item }) => {
+    // Swipeable right action (Delete button)
+    const renderRightActions = () => {
+      return (
+        <View className="justify-center items-center bg-red-500 w-20">
+          <Text className="text-white font-semibold">Delete</Text>
+        </View>
+      );
+    };
+
+    return (
+      <Swipeable
+        renderRightActions={renderRightActions} // Render delete button on swipe
+        onSwipeableRightOpen={() => handleDeleteTask(item.id)} // Trigger delete on swipe
+      >
+        <TouchableOpacity
+          className="bg-white p-4 my-2 rounded-lg shadow-md"
+          onPress={() => navigation.navigate('TaskDetail', { task: item })} // Navigate to detail screen
+        >
+          <Text className="text-lg font-medium">{item.title}</Text>
+          <Text className="text-gray-600">Category: {item.category}</Text>
+          <Text className="text-gray-600">Due: {item.dueDate}</Text>
+          <Text
+            className={`text-sm ${
+              item.status === 'Completed' ? 'text-green-600' : 'text-red-600'
+            }`}
+          >
+            Status: {item.status}
+          </Text>
+        </TouchableOpacity>
+      </Swipeable>
+    );
+  };
 
   // Show loading indicator
   if (loading) {
@@ -155,6 +180,7 @@ const TaskList = () => {
       <Text className="text-2xl font-bold text-center text-gray-900 mb-4">
         Task List
       </Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
 
       {/* Search Input */}
       <TextInput
@@ -173,12 +199,16 @@ const TaskList = () => {
         </Text>
       </TouchableOpacity>
 
+    <TouchableOpacity>
+    <View>
+     
       {/* Task List */}
       {filteredTasks.length > 0 ? (
         <FlatList
           data={filteredTasks}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={renderTaskItem}
+          scrollEnabled={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchTasks} />}
         />
       ) : (
@@ -186,6 +216,8 @@ const TaskList = () => {
           <Text className="text-gray-600 text-lg">No tasks found.</Text>
         </View>
       )}
+      </View>
+      </TouchableOpacity>
 
       {/* Filter Modal */}
       <Modal
@@ -266,7 +298,9 @@ const TaskList = () => {
           </View>
         </View>
       </Modal>
+      </ScrollView>
     </View>
+    
   );
 };
 

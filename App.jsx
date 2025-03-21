@@ -22,7 +22,6 @@ const App = () => {
           headerShown: false,
           headerTitleStyle: { fontWeight: "bold" },
         }}
-
       >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="AddTask" component={AddTask} />

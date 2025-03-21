@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import firestore from "@react-native-firebase/firestore";
+import Button from './../components/core/Button';
 
 const CATEGORIES = ["Work", "Personal", "Fitness", "Shopping", "Miscellaneous", "Study", "Other"]; // Fixed categories
 
@@ -15,6 +16,7 @@ const EditTask = () => {
   const [dueDate, setDueDate] = useState(task.dueDate);
   const [status, setStatus] = useState(task.status || "Pending"); // Use task.status for consistency
   const [notes, setNotes] = useState(task.notes || "");
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   // ✅ Handle Task Update
   const handleUpdate = async () => {
@@ -27,7 +29,7 @@ const EditTask = () => {
       Alert.alert("Error", "Please enter a valid due date (YYYY-MM-DD).");
       return;
     }
-
+ setIsLoading(true)
     try {
       // Update task in Firestore
       await firestore()
@@ -44,9 +46,11 @@ const EditTask = () => {
 
       Alert.alert("Success", "Task updated successfully.");
       navigation.goBack();
+      setIsLoading(false)
     } catch (error) {
       console.error("Error updating task:", error);
       Alert.alert("Error", "Failed to update task.");
+      setIsLoading(false)
     }
   };
 
@@ -128,12 +132,17 @@ const EditTask = () => {
 
       {/* Action Buttons */}
       <View className="flex-row justify-between">
-        <TouchableOpacity
-          className="flex-1 bg-blue-600 py-3 rounded-lg mr-2"
-          onPress={handleUpdate}
-        >
-          <Text className="text-center text-white text-lg font-medium">Save Changes</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        className="flex-1 bg-blue-600 py-3 rounded-lg mr-2 flex-row justify-center items-center"
+        onPress={handleUpdate}
+        disabled={isLoading} // Disable button when loading
+      >
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#ffffff" /> // Show loading indicator
+        ) : (
+          <Text className="text-center text-white text-lg font-medium">Save Changes</Text> // Show text
+        )}
+      </TouchableOpacity>
 
         <TouchableOpacity
           className="flex-1 bg-gray-400 py-3 rounded-lg ml-2"

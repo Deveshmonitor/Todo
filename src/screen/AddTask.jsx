@@ -1,6 +1,6 @@
 import firestore from "@react-native-firebase/firestore";
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert,  ActivityIndicator, ScrollView } from "react-native";
 
 const CATEGORIES = ["Work", "Personal", "Fitness", "Shopping", "Miscellaneous", "Study", "Other"];
 
@@ -9,6 +9,7 @@ const AddTask = ({ navigation }) => {
   const [dueDate, setDueDate] = useState(""); // Storing as string
   const [category, setCategory] = useState("Work"); // Default category
   const [notes, setNotes] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Function to Validate Date (YYYY-MM-DD)
   const isValidDate = (dateString) => {
@@ -34,7 +35,7 @@ const AddTask = ({ navigation }) => {
       Alert.alert("Error", "Please enter a valid Due Date (YYYY-MM-DD)");
       return;
     }
-
+    setIsLoading(true);
     try {
       await firestore().collection("tasks").add({
         title,
@@ -45,18 +46,18 @@ const AddTask = ({ navigation }) => {
         status: "Pending",
         createdAt: firestore.FieldValue.serverTimestamp(),
       });
-
+      setIsLoading(false);
       Alert.alert("Success", "Task added successfully!");
-      navigation.goBack();
     } catch (error) {
       console.error("Firestore error:", error);
+      setIsLoading(false);
       Alert.alert("Error", "Failed to add task: " + error.message);
     }
   };
 
   return (
+    <ScrollView> 
     <View className="flex-1 p-6 bg-gray-100">
-      {/* Title Input */}
       <Text className="text-xl font-semibold mb-2">Task Title</Text>
       <TextInput
         value={title}
@@ -65,7 +66,6 @@ const AddTask = ({ navigation }) => {
         className="border p-3 rounded-lg bg-white"
       />
 
-      {/* Due Date Input */}
       <Text className="text-xl font-semibold mt-4 mb-2">Due Date (YYYY-MM-DD)</Text>
       <TextInput
         value={dueDate}
@@ -75,7 +75,6 @@ const AddTask = ({ navigation }) => {
         keyboardType="numeric"
       />
 
-      {/* Category Selection */}
       <Text className="text-xl font-semibold mt-4 mb-2">Category</Text>
       <View className="flex-row flex-wrap">
         {CATEGORIES.map((item) => (
@@ -93,7 +92,6 @@ const AddTask = ({ navigation }) => {
         ))}
       </View>
 
-      {/* Notes Input */}
       <Text className="text-xl font-semibold mt-4 mb-2">Notes</Text>
       <TextInput
         value={notes}
@@ -103,16 +101,28 @@ const AddTask = ({ navigation }) => {
         multiline
       />
 
-      {/* Action Buttons */}
-      <View className="flex-row justify-between mt-6">
-        <TouchableOpacity onPress={handleSaveTask} className="bg-green-500 px-4 py-2 rounded-lg">
-          <Text className="text-white font-semibold">Save Task</Text>
+      <View className="flex-1 justify-between mt-6">
+        <TouchableOpacity
+          onPress={handleSaveTask}
+          className="bg-blue-500 py-3 my-3 w-full rounded-md flex-row justify-center items-center"
+          disabled={isLoading} 
+        >
+          {isLoading ? (
+            <ActivityIndicator size="small" color="#ffffff" /> 
+          ) : (
+            <Text className="text-white font-semibold">Save Task</Text> 
+          )}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-red-500 px-4 py-2 rounded-lg">
-          <Text className="text-white font-semibold">Cancel</Text>
+
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="bg-gray-500 py-3 my-3 w-full rounded-md"
+        >
+          <Text className="text-white text-center font-semibold">Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>
+    </ScrollView>
   );
 };
 

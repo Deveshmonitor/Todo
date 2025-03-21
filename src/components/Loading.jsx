@@ -14,6 +14,7 @@ const Loading = ({isLoading}) => {
       <View style={styles.centeredView}>
         <ActivityIndicator size={80} color="#808080" />
       </View>
+
     </Modal>
   );
 };
@@ -25,8 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
-    opacity: 0.8,
+    opacity: 0.5, // Adjusted opacity for more transparency
   },
   modalView: {
     margin: 20,
