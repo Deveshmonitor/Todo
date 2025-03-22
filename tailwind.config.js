@@ -4,7 +4,17 @@ module.exports = {
   content: ['./App.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        Bold1: 'WinkySans-Bold',
+        Medium1: 'WinkySans-Medium',
+        Regular1: 'WinkySans-Book',
+        Italic1: 'WinkySans-ltalic',
+        ExtraBold1: 'WinkySans-ExtraBold',
+        Light1: 'WinkySans-Light',
+        Black1: 'WinkySans-Black',
+      },
+    },
   },
   plugins: [],
 };

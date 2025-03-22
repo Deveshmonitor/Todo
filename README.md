@@ -149,9 +149,28 @@
 
 ## 📸 Screenshots of the App
 
-![Screenshot 1](path-to-screenshot-1.png)
-![Screenshot 2](path-to-screenshot-2.png)
-![Screenshot 3](path-to-screenshot-3.png)
+
+![Screenshot 1](./assets/Images/2.jpg);
+![Screenshot 2](./assets/Images/20.jpg);
+![Screenshot 3](./assets/Images/12.jpg);
+![Screenshot 4](./assets/Images/8.jpg);
+![Screenshot 5](./assets/Images/9.jpg);
+![Screenshot 6](./assets/Images/15.jpg);
+![Screenshot 7](./assets/Images/19.jpg);
+![Screenshot 8](./assets/Images/18.jpg);
+![Screenshot 9](./assets/Images/7.jpg);
+![Screenshot 10](./assets/Images/6.jpg);
+![Screenshot 11](./assets/Images/11.jpg);
+![Screenshot 12](./assets/Images/10.jpg);
+![Screenshot 13](./assets/Images/1.jpg);
+![Screenshot 14](./assets/Images/4.jpg);
+![Screenshot 15](./assets/Images/3.jpg);
+![Screenshot 16](./assets/Images/5.jpg);
+![Screenshot 17](./assets/Images/16.jpg);
+![Screenshot 18](./assets/Images/14.jpg);
+![Screenshot 19](./assets/Images/2.jpg);
+![Screenshot 20](./assets/Images/13.jpg);
+
 
 ---
 

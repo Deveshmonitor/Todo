@@ -61,7 +61,7 @@ const HomeScreen = () => {
 
   return (
     <View className="flex-1 bg-gray-100 p-4">
-      <Text className="text-4xl font-semibold text-center text-gray-900 drop-shadow-md mb-6">
+      <Text className="text-4xl text-center text-gray-900 drop-shadow-md mb-6" >
         Smart Todo App
       </Text>
       <ScrollView
