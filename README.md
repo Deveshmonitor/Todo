@@ -150,39 +150,39 @@
 ## 📸 Screenshots of the App
 
 
-![Screenshot 1](./assets/Images/2.jpg);
-![Screenshot 2](./assets/Images/20.jpg);
-![Screenshot 3](./assets/Images/12.jpg);
-![Screenshot 4](./assets/Images/8.jpg);
-![Screenshot 5](./assets/Images/9.jpg);
-![Screenshot 6](./assets/Images/15.jpg);
-![Screenshot 7](./assets/Images/19.jpg);
-![Screenshot 8](./assets/Images/18.jpg);
-![Screenshot 9](./assets/Images/7.jpg);
-![Screenshot 10](./assets/Images/6.jpg);
-![Screenshot 11](./assets/Images/11.jpg);
-![Screenshot 12](./assets/Images/10.jpg);
-![Screenshot 13](./assets/Images/1.jpg);
-![Screenshot 14](./assets/Images/4.jpg);
-![Screenshot 15](./assets/Images/3.jpg);
-![Screenshot 16](./assets/Images/5.jpg);
-![Screenshot 17](./assets/Images/16.jpg);
-![Screenshot 18](./assets/Images/14.jpg);
-![Screenshot 19](./assets/Images/2.jpg);
-![Screenshot 20](./assets/Images/13.jpg);
+<img src="./assets/Images/2.jpg" width="200" height="350">
+<img src="./assets/Images/20.jpg" width="200" height="350">
+<img src="./assets/Images/12.jpg" width="200" height="350">
+<img src="./assets/Images/8.jpg" width="200" height="350">
+<img src="./assets/Images/9.jpg" width="200" height="350">
+<img src="./assets/Images/15.jpg" width="200" height="350">
+<img src="./assets/Images/19.jpg" width="200" height="350">
+<img src="./assets/Images/18.jpg" width="200" height="350">
+<img src="./assets/Images/7.jpg" width="200" height="350">
+<img src="./assets/Images/6.jpg" width="200" height="350">
+<img src="./assets/Images/11.jpg" width="200" height="350">
+<img src="./assets/Images/10.jpg" width="200" height="350">
+<img src="./assets/Images/1.jpg" width="200" height="350">
+<img src="./assets/Images/4.jpg" width="200" height="350">
+<img src="./assets/Images/3.jpg" width="200" height="350">
+<img src="./assets/Images/5.jpg" width="200" height="350">
+<img src="./assets/Images/16.jpg" width="200" height="350">
+<img src="./assets/Images/14.jpg" width="200" height="350">
+<img src="./assets/Images/2.jpg" width="200" height="350">
+<img src="./assets/Images/13.jpg" width="200" height="350">
 
 
 ---
 
 ## 🎥 Video Demo
 
-[Watch Demo](https://your-demo-video-link.com)
+[Watch Demo](https://drive.google.com/file/d/1v0rdS73CBhWXjkOYo_aAuiBfHCjwQsAw/view?usp=drive_link)
 
 ---
 
 ## 📱 APK File
 
-[Download APK](https://your-apk-download-link.com)
+[Download APK](https://drive.google.com/file/d/18xWDM5sSyA6cr3foNEQgLpX_XveQenj8/view?usp=drive_link)
 
 ---
 
