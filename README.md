@@ -1,4 +1,4 @@
-# Project Name
+# Smart Todo App
 
 ## 📌 Project Setup Instructions
 
